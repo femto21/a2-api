@@ -11,24 +11,13 @@ function getTokenFromCookieHeader(cookieHeader) {
   return tokenCookie ? decodeURIComponent(tokenCookie.slice(6)) : null;
 }
 
-// export function auth(req, res, next) {
-//   const token = getTokenFromCookieHeader(req.headers.cookie);
-//   if (!token) return res.sendStatus(401);
-//   try {
-//     req.user = jwt.verify(token, process.env.JWT_SECRET);
-//     next();
-//   } catch {
-//     res.sendStatus(401);
-//   }
-// }
 export function auth(req, res, next) {
   const authHeader = req.headers.authorization;
   const bearerToken = authHeader?.startsWith("Bearer ")
     ? authHeader.slice(7)
     : null;
 
-  const cookieToken = getTokenFromCookieHeader(req.headers.cookie);
-  const token = bearerToken || cookieToken;
+  const token = bearerToken;
 
   if (!token) {
     return res.status(401).json({
